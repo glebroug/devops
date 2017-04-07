@@ -1,0 +1,14 @@
+---
+- hosts: Database
+  remote_user: provision
+  become: yes
+ 
+  tasks:
+    - name: install postgres
+      apt: pkg=nginx state=installed update_cache=true
+
+
+  
+
+
+   
