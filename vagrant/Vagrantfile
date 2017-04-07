@@ -7,9 +7,9 @@ Vagrant.configure(2) do |config|
   authorize_key_for_root config, '~/ssh/id_dsa.pub', '~/.ssh/id_rsa.pub'
 
   {
-    'web'     => '127.0.0.22',
-    'db1'     => '127.0.0.23',
-    'app'     => '127.0.0.24',
+    'web'     => '192.168.0.190',
+    'db1'     => '192.168.0.191',
+    'app'     => '192.168.0.192',
   }.each do |short_name, ip|
    config.vm.define short_name do |host|
     host.vm.network 'private_network', ip: ip
