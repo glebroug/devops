@@ -1,0 +1,8 @@
+[WEBSERVER]
+192.168.0.190 ansible_user=root ansible_private_key="~/.ssh/id_rsa.pub"
+
+[DATABASE]
+192.168.0.191 ansible_user=provision ansible_private_key="~/.ssh/provision_rsa.pub"
+
+[APP]
+192.168.0.192 ansible_user=provision ansible_private_key="~/.ssh/provision_rsa.pub"

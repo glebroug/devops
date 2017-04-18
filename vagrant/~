@@ -1,0 +1,18 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "hashicorp/precise32"
+  authorize_key_for_root config, '~/ssh/id_dsa.pub', '~/.ssh/id_rsa.pub'
+
+  {
+    'web'     => '127.0.0.22',
+    'db1'     => '127.0.0.23',
+    'app'     => '127.0.0.24',
+  }.each do |short_name, ip|
+   config.vm.define short_name do |host|
+    host.vm.network 'private_network', ip: ip
+    host.vm.hostname = "#{short_name}.web.dev"
+  end
+ end
+end

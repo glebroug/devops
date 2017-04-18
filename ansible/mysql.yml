@@ -1,0 +1,17 @@
+---
+- name: install mysql 
+  hosts: DATABASE
+  remote_user: provision
+  Tasks:
+    - name: Mysql
+      apt: pkg={{ item }} update_cache=yes cache_valid_time=3600 state=installed
+      sudo: yes
+      with_items:
+        - libmysqlclient-dev
+        - python-mysqldb
+        - mysql-server
+        - mysql-client
+        - build-essential
+    - name: start mysql service
+        service name=mysql state=started enabled= true
+

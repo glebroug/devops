@@ -1,11 +1,64 @@
 ---
-- hosts: Database
-  remote_user: provision
-  become: yes
+- hosts: WEBSERVER
+  remote_user:  provision
  
   tasks:
     - name: install postgres
       apt: pkg=nginx state=installed update_cache=true
+    
+    - name: install Python 3
+      apt: pkg=python3-minimal state=installed
+
+    - name: PHP | install ondrej PHP PPA
+      apt_repository: repo='ppa:ondrej/php' update_cache=yes
+
+    - name: install php
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - php7.0-cli
+        - php7.0-mysql
+        - php7.0-cgi
+        - php7.0-fpm
+        - php7.0-gd
+        - php7.0-imap
+        - php7.0-xml
+        - php7.0-mbstring
+        - php7.0-intl
+        - php7.0-apcu
+
+    - name: copy web dir
+      copy: src={{ item }} dest=/usr/share/nginx/www/{{ item }}
+      with_items:
+        - 1and1.tar.gz
+    - unarchive:
+        src: /usr/share/nginx/www/{{ item }}
+        dest: /usr/share/nginx/www/
+        copy: no
+        remote_src: true 
+      with_items:
+        - 1and1.tar.gz
+
+#- hosts: WEBSERVER
+#  remote_user: gdhb
+#  tasks:
+#    - name: copy index
+#      synchronize:
+#        mode: pull
+#        src: rsync://gdhb@192.168.0.1/home/gdhb/tmp/ 
+#        dest: usr/share/nginx/www/ 
+
+- hosts: DATABASE
+  remote_user: provision
+  tasks:
+    - name: install mysql
+      apt: name={{ item }} update_cache=yes state=latest
+      with_items:
+        - libmysqlclient-dev
+        - python-mysqldb
+        - mysql-server
+        - mysql-client
+        - build-essential
+
 
 
   

@@ -1,0 +1,27 @@
+---
+- hosts: database
+  remote_user: provision
+  vars:
+    mysql_root_password: heprava12
+
+  Tasks:
+    - name: set root pass
+      debconf: name='mysql-server' question='mysql-server/root_password' value='{{mysql_root_password | quote}}' vtype='password'
+    - name: confirm pass
+      debconf: name='mysql-server' question='mysql-server/root_password_again' value='{{mysql_root_password | quote}}' vtype='password'
+    - name: Mysql
+      apt: pkg={{ item }} update_cache=yes cache_valid_time=3600 state=installed
+      sudo: yes
+      with_items:
+        - bundler
+        - mysql-server-core-5.5
+        - mysql-client0core-5.5
+        - libmysqlclient-dev
+        - python-mysqllib
+        - python-mysqldb
+        - mysql-server
+        - mysql-client
+        - build-essential
+    - name: start mysql service
+        service name=mysql state=started enabled= true
+
