@@ -3,8 +3,31 @@
   remote_user:  provision
  
   tasks:
-    - name: install postgres
-      apt: pkg=nginx state=installed update_cache=true
+
+    - name: install python-software-properties
+      apt: pkg=python3 state=installed
+
+    - name: "add nginx ppa if it ubuntu 10.04 and up"
+      action: apt_repository repo=ppa:nginx/stable
+#      only_if: "$is_ubuntu and $is_10_up"
+
+    - name: update apt repo
+      action: apt update-cache=yes
+
+    - name: install nginx 
+      action: apt name=nginx state=installed
+
+    - name:  copy fixed init for nginx
+      action: copy src=files/nginx.init dest=/etc/init.d/nginx mode=0755  backup=yes
+     
+    - name: service nginx 
+      action: service name=nginx state=started 
+
+    - name: write nginx.conf 
+      action: template src=templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf backup=yes
+
+#    - name: install postgres
+#      apt: pkg=nginx state=installed update_cache=true
     
     - name: install Python 3
       apt: pkg=python3-minimal state=installed
@@ -25,6 +48,7 @@
         - php7.0-mbstring
         - php7.0-intl
         - php7.0-apcu
+        - python-pip
 
     - name: copy web dir
       copy: src={{ item }} dest=/usr/share/nginx/www/{{ item }}
