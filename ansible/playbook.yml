@@ -1,6 +1,6 @@
 ---
 - hosts: WEBSERVER
-  remote_user:  provision
+  remote_user: root
  
   tasks:
 
@@ -36,7 +36,7 @@
       apt_repository: repo='ppa:ondrej/php' update_cache=yes
 
     - name: install php
-      apt: name={{ item }} update_cache=yes state=latest
+      apt: name={{ item }} update_cache=yes state=installed
       with_items:
         - php7.0-cli
         - php7.0-mysql
@@ -51,12 +51,12 @@
         - python-pip
 
     - name: copy web dir
-      copy: src={{ item }} dest=/usr/share/nginx/www/{{ item }}
+      copy: src={{ item }} dest=/var/www/html/{{ item }}
       with_items:
         - 1and1.tar.gz
     - unarchive:
-        src: /usr/share/nginx/www/{{ item }}
-        dest: /usr/share/nginx/www/
+        src: /var/www/html/{{ item }}
+        dest: /var/www/html/
         copy: no
         remote_src: true 
       with_items:
